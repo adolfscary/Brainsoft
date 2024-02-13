@@ -1,0 +1,28 @@
+{
+  "name": "Brainsoft challenge",
+  "dockerComposeFile": ["docker-compose.yml"],
+  "service": "dev",
+  "workspaceFolder": "/home/node/app",
+  "forwardPorts": [3000],
+  "shutdownAction": "stopCompose",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "eamodio.gitlens",
+        "Prisma.prisma",
+        "Orta.vscode-jest"
+      ],
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "bash"
+      }
+    }
+  },
+  "features": {
+    "ghcr.io/stuartleeks/dev-container-features/shell-history:0": "latest"
+  },
+  "initializeCommand": "",
+  "onCreateCommand": "./scripts/devcontainer/on-create-command.js",
+  "postStartCommand": "./scripts/devcontainer/post-start-command.ts"
+}

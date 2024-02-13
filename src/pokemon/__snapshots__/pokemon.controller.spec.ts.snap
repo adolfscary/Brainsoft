@@ -1,0 +1,336 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`PokemonController findById findByName should get pokemon by name 1`] = `
+{
+  "attacks": {
+    "fast": [
+      {
+        "damage": 12,
+        "name": "Tackle",
+        "type": "Normal",
+      },
+      {
+        "damage": 7,
+        "name": "Vine Whip",
+        "type": "Grass",
+      },
+    ],
+    "special": [
+      {
+        "damage": 70,
+        "name": "Power Whip",
+        "type": "Grass",
+      },
+      {
+        "damage": 40,
+        "name": "Seed Bomb",
+        "type": "Grass",
+      },
+      {
+        "damage": 55,
+        "name": "Sludge Bomb",
+        "type": "Poison",
+      },
+    ],
+  },
+  "classification": "Seed Pokémon",
+  "createdAt": Any<Date>,
+  "evolutionRequirements": {
+    "amount": 25,
+    "name": "Bulbasaur candies",
+  },
+  "evolutions": [
+    {
+      "createdAt": Any<Date>,
+      "externalId": "2",
+      "id": Any<String>,
+      "name": "Ivysaur",
+      "updatedAt": Any<Date>,
+    },
+    {
+      "createdAt": Any<Date>,
+      "externalId": "3",
+      "id": Any<String>,
+      "name": "Venusaur",
+      "updatedAt": Any<Date>,
+    },
+  ],
+  "externalId": "001",
+  "fleeRate": 0.1,
+  "height": {
+    "maximum": "0.79m",
+    "minimum": "0.61m",
+  },
+  "id": Any<String>,
+  "maxCP": 951,
+  "maxHP": 1071,
+  "name": "Bulbasaur",
+  "previousEvolutions": [],
+  "resistant": [
+    "Water",
+    "Electric",
+    "Grass",
+    "Fighting",
+    "Fairy",
+  ],
+  "types": [
+    {
+      "createdAt": Any<Date>,
+      "id": Any<String>,
+      "name": "Grass",
+      "updatedAt": Any<Date>,
+    },
+    {
+      "createdAt": Any<Date>,
+      "id": Any<String>,
+      "name": "Poison",
+      "updatedAt": Any<Date>,
+    },
+  ],
+  "updatedAt": Any<Date>,
+  "weaknesses": [
+    "Fire",
+    "Ice",
+    "Flying",
+    "Psychic",
+  ],
+  "weight": {
+    "maximum": "7.76kg",
+    "minimum": "6.04kg",
+  },
+}
+`;
+
+exports[`PokemonController findById paginate should paginate over pokemons 1`] = `
+{
+  "data": [
+    {
+      "attacks": {
+        "fast": [
+          {
+            "damage": 7,
+            "name": "Pound",
+            "type": "Normal",
+          },
+        ],
+        "special": [
+          {
+            "damage": 65,
+            "name": "Dragon Pulse",
+            "type": "Dragon",
+          },
+          {
+            "damage": 100,
+            "name": "Earthquake",
+            "type": "Ground",
+          },
+          {
+            "damage": 100,
+            "name": "Fire Blast",
+            "type": "Fire",
+          },
+          {
+            "damage": 80,
+            "name": "Hurricane",
+            "type": "Flying",
+          },
+          {
+            "damage": 120,
+            "name": "Hyper Beam",
+            "type": "Normal",
+          },
+          {
+            "damage": 85,
+            "name": "Moonblast",
+            "type": "Fairy",
+          },
+          {
+            "damage": 55,
+            "name": "Psychic",
+            "type": "Psychic",
+          },
+          {
+            "damage": 120,
+            "name": "Solar Beam",
+            "type": "Grass",
+          },
+          {
+            "damage": 100,
+            "name": "Thunder",
+            "type": "Electric",
+          },
+        ],
+      },
+      "classification": "New Species Pokémon",
+      "createdAt": Any<Date>,
+      "evolutionRequirements": null,
+      "evolutions": [],
+      "externalId": "151",
+      "fleeRate": 0.1,
+      "height": {
+        "maximum": "0.45m",
+        "minimum": "0.35m",
+      },
+      "id": Any<String>,
+      "maxCP": 3087,
+      "maxHP": 3299,
+      "name": "Mew",
+      "previousEvolutions": [],
+      "resistant": [
+        "Fighting",
+        "Psychic",
+      ],
+      "types": [
+        {
+          "createdAt": Any<Date>,
+          "id": Any<String>,
+          "name": "Psychic",
+          "updatedAt": Any<Date>,
+        },
+      ],
+      "updatedAt": Any<Date>,
+      "weaknesses": [
+        "Bug",
+        "Ghost",
+        "Dark",
+      ],
+      "weight": {
+        "maximum": "4.5kg",
+        "minimum": "3.5kg",
+      },
+    },
+  ],
+  "pageInfo": {
+    "currentPage": 1,
+    "isFirstPage": true,
+    "isLastPage": false,
+    "nextPage": 2,
+    "pageCount": 151,
+    "previousPage": null,
+    "totalCount": 151,
+  },
+}
+`;
+
+exports[`PokemonController findById paginateTypes should paginate over pokemons types 1`] = `
+{
+  "data": [
+    {
+      "createdAt": Any<Date>,
+      "id": Any<String>,
+      "name": "Dragon",
+      "updatedAt": Any<Date>,
+    },
+  ],
+  "pageInfo": {
+    "currentPage": 1,
+    "isFirstPage": true,
+    "isLastPage": false,
+    "nextPage": 2,
+    "pageCount": 17,
+    "previousPage": null,
+    "totalCount": 17,
+  },
+}
+`;
+
+exports[`PokemonController findById should get pokemon by id 1`] = `
+{
+  "attacks": {
+    "fast": [
+      {
+        "damage": 12,
+        "name": "Tackle",
+        "type": "Normal",
+      },
+      {
+        "damage": 7,
+        "name": "Vine Whip",
+        "type": "Grass",
+      },
+    ],
+    "special": [
+      {
+        "damage": 70,
+        "name": "Power Whip",
+        "type": "Grass",
+      },
+      {
+        "damage": 40,
+        "name": "Seed Bomb",
+        "type": "Grass",
+      },
+      {
+        "damage": 55,
+        "name": "Sludge Bomb",
+        "type": "Poison",
+      },
+    ],
+  },
+  "classification": "Seed Pokémon",
+  "createdAt": Any<Date>,
+  "evolutionRequirements": {
+    "amount": 25,
+    "name": "Bulbasaur candies",
+  },
+  "evolutions": [
+    {
+      "createdAt": Any<Date>,
+      "externalId": "2",
+      "id": Any<String>,
+      "name": "Ivysaur",
+      "updatedAt": Any<Date>,
+    },
+    {
+      "createdAt": Any<Date>,
+      "externalId": "3",
+      "id": Any<String>,
+      "name": "Venusaur",
+      "updatedAt": Any<Date>,
+    },
+  ],
+  "externalId": "001",
+  "fleeRate": 0.1,
+  "height": {
+    "maximum": "0.79m",
+    "minimum": "0.61m",
+  },
+  "id": Any<String>,
+  "maxCP": 951,
+  "maxHP": 1071,
+  "name": "Bulbasaur",
+  "previousEvolutions": [],
+  "resistant": [
+    "Water",
+    "Electric",
+    "Grass",
+    "Fighting",
+    "Fairy",
+  ],
+  "types": [
+    {
+      "createdAt": Any<Date>,
+      "id": Any<String>,
+      "name": "Grass",
+      "updatedAt": Any<Date>,
+    },
+    {
+      "createdAt": Any<Date>,
+      "id": Any<String>,
+      "name": "Poison",
+      "updatedAt": Any<Date>,
+    },
+  ],
+  "updatedAt": Any<Date>,
+  "weaknesses": [
+    "Fire",
+    "Ice",
+    "Flying",
+    "Psychic",
+  ],
+  "weight": {
+    "maximum": "7.76kg",
+    "minimum": "6.04kg",
+  },
+}
+`;

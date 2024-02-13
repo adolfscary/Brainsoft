@@ -1,0 +1,111 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id    String @id @default(auto()) @map("_id") @db.ObjectId
+  email String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  favouritePokemons    Pokemon[] @relation(fields: [favouritePokemonsIds], references: [id])
+  favouritePokemonsIds String[]  @db.ObjectId
+
+  @@unique([email])
+}
+
+model PokemonType {
+  id   String @id @default(auto()) @map("_id") @db.ObjectId
+  name String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  pokemon    Pokemon[] @relation(fields: [pokemonIds], references: [id])
+  pokemonIds String[]  @db.ObjectId
+
+  @@unique([name])
+}
+
+model PokemonEvolutions {
+  id         String @id @default(auto()) @map("_id") @db.ObjectId
+  externalId String
+  name       String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  pokemon            Pokemon[] @relation(name: "PokemonToPokemonEvolutions", fields: [pokemonIds], references: [id])
+  pokemonIds         String[]  @db.ObjectId
+  previousPokemon    Pokemon[] @relation(name: "PokemonToPokemonPreviousEvolutions", fields: [previousPokemonIds], references: [id])
+  previousPokemonIds String[]  @db.ObjectId
+
+  @@unique([externalId])
+  @@unique([name])
+}
+
+type PokemonWeight {
+  minimum String
+  maximum String
+}
+
+type PokemonHeight {
+  minimum String
+  maximum String
+}
+
+type PokemonEvolutionRequirements {
+  amount Int
+  name   String
+}
+
+type PokemonAttack {
+  name   String
+  type   String
+  damage Int
+}
+
+type PokemonAttacks {
+  fast    PokemonAttack[]
+  special PokemonAttack[]
+}
+
+model Pokemon {
+  id                    String                        @id @default(auto()) @map("_id") @db.ObjectId
+  externalId            String
+  name                  String
+  classification        String
+  resistant             String[]
+  weaknesses            String[]
+  weight                PokemonWeight
+  height                PokemonHeight
+  fleeRate              Float
+  evolutionRequirements PokemonEvolutionRequirements?
+  maxCP                 Int
+  maxHP                 Int
+  attacks               PokemonAttacks
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  types                 PokemonType[]       @relation(fields: [typeIds], references: [id])
+  typeIds               String[]            @db.ObjectId
+  evolutions            PokemonEvolutions[] @relation(name: "PokemonToPokemonEvolutions", fields: [evolutionsIds], references: [id])
+  evolutionsIds         String[]            @db.ObjectId
+  previousEvolutions    PokemonEvolutions[] @relation(name: "PokemonToPokemonPreviousEvolutions", fields: [previousEvolutionsIds], references: [id])
+  previousEvolutionsIds String[]            @db.ObjectId
+  users                 User[]              @relation(fields: [userIds], references: [id])
+  userIds               String[]            @db.ObjectId
+
+  @@unique([externalId])
+  @@unique([name])
+}
