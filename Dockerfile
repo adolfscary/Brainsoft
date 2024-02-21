@@ -25,8 +25,9 @@ FROM base as dev_packages
 ENV HOME /home/node
 
 WORKDIR $HOME/app
+RUN chown node:node $HOME/app
 
-COPY package.json yarn.lock .npmrc .yarnrc.yml $HOME/app/
+COPY --chown=node:node package.json yarn.lock .npmrc .yarnrc.yml $HOME/app/
 
 RUN yarn
 
@@ -36,9 +37,12 @@ FROM base as builder
 ENV HOME /home/node
 
 WORKDIR $HOME/app
+RUN chown node:node $HOME/app
 
 COPY --from=dev_packages --chown=node:node $HOME/app/node_modules $HOME/app/node_modules
-COPY package.json yarn.lock .npmrc .yarnrc.yml .eslintrc.cjs .prettierrc.json nest-cli.json tsconfig.json tsconfig.build.json prisma src $HOME/app/
+COPY --chown=node:node package.json yarn.lock .npmrc .yarnrc.yml prisma .eslintrc.cjs .prettierrc.json nest-cli.json tsconfig.json tsconfig.build.json $HOME/app/
+COPY --chown=node:node src $HOME/app/src
+COPY --chown=node:node prisma $HOME/app/prisma
 
 RUN yarn db:generate
 RUN yarn build
@@ -50,11 +54,15 @@ ENV HOME /home/node
 ENV NODE_ENV production
 
 WORKDIR $HOME/app
+RUN chown node:node $HOME/app
 
-COPY package.json yarn.lock .npmrc .yarnrc.yml nest-cli.json prisma tsconfig.json src $HOME/app/
+COPY --chown=node:node package.json yarn.lock .npmrc .yarnrc.yml prisma tsconfig.json $HOME/app/
+COPY --chown=node:node src $HOME/app/src
+COPY --chown=node:node prisma $HOME/app/prisma
+COPY --chown=node:node seed $HOME/app/seed
+COPY --from=dev_packages --chown=node:node $HOME/app/node_modules $HOME/app/node_modules
 COPY --from=builder --chown=node:node $HOME/app/dist $HOME/app/dist
 
-RUN yarn
 RUN yarn db:generate
 
-CMD ["npm", "start"]
+CMD ["node", "dist/src/main.js"]

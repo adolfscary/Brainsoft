@@ -1,11 +1,53 @@
 import { Injectable } from "@nestjs/common";
 import { User } from "@prisma/client";
 import { PrismaService } from "../prisma/prisma.service.js";
-import { prismaSelect } from "./pokemon.common.js";
+import { PokemonEntity } from "./entity/pokemon.entity.js";
+import { prismaInclude } from "./pokemon.common.js";
 
 @Injectable()
 export class PokemonService {
   constructor(private prisma: PrismaService) {}
+
+  toPokemonEntity(
+    pokemon: NonNullable<Awaited<ReturnType<PokemonService["findById"]>>>,
+  ): PokemonEntity {
+    return {
+      id: pokemon.id,
+      externalId: pokemon.externalId,
+      name: pokemon.name,
+      classification: pokemon.classification,
+      resistant: pokemon.resistant,
+      weaknesses: pokemon.weaknesses,
+      weight: pokemon.weight,
+      height: pokemon.height,
+      fleeRate: pokemon.fleeRate,
+      evolutionRequirements: pokemon.evolutionRequirements,
+      maxCP: pokemon.maxCP,
+      maxHP: pokemon.maxHP,
+      attacks: pokemon.attacks,
+      updatedAt: pokemon.updatedAt,
+      createdAt: pokemon.createdAt,
+      evolutions: pokemon.evolutions.map(
+        ({ id, externalId, name, updatedAt, createdAt }) => ({
+          id,
+          externalId,
+          name,
+          updatedAt,
+          createdAt,
+        }),
+      ),
+      previousEvolutions: pokemon.previousEvolutions.map(
+        ({ id, externalId, name, updatedAt, createdAt }) => ({
+          id,
+          externalId,
+          name,
+          updatedAt,
+          createdAt,
+        }),
+      ),
+      types: pokemon.types.map(({ name }) => name),
+    };
+  }
 
   async paginate({
     search,
@@ -23,59 +65,50 @@ export class PokemonService {
     page: number;
     currentUser: User;
   }) {
-    const [data, pageInfo] = await this.prisma.pokemon
-      .paginate({
-        select: prismaSelect.pokemon,
+    const { result: data, ...pageInfo } =
+      await this.prisma.extended.pokemon.paginate({
+        include: prismaInclude.pokemon,
         where: {
-          AND: [
-            {
-              ...(search?.name
-                ? {
-                    name: {
-                      contains: search.name,
-                    },
-                  }
-                : {}),
-            },
-            {
-              ...(filter?.type
-                ? {
-                    types: {
-                      every: {
-                        name: filter.type,
-                      },
-                    },
-                  }
-                : {}),
-            },
-            {
-              ...(typeof filter?.favorite === "boolean"
-                ? {
-                    users: {
-                      ...(filter.favorite === true
-                        ? {
-                            some: {
-                              id: currentUser.id,
-                            },
-                          }
-                        : {
-                            none: {
-                              id: currentUser.id,
-                            },
-                          }),
-                    },
-                  }
-                : {}),
-            },
-          ],
+          ...(search?.name
+            ? {
+                name: {
+                  mode: "insensitive",
+                  contains: search.name,
+                },
+              }
+            : {}),
+          ...(filter?.type
+            ? {
+                types: {
+                  some: {
+                    name: filter.type,
+                  },
+                },
+              }
+            : {}),
+          ...(typeof filter?.favorite === "boolean"
+            ? {
+                users: {
+                  ...(filter.favorite === true
+                    ? {
+                        some: {
+                          id: currentUser.id,
+                        },
+                      }
+                    : {
+                        none: {
+                          id: currentUser.id,
+                        },
+                      }),
+                },
+              }
+            : {}),
         },
-        orderBy: { createdAt: "desc" },
-      })
-      .withPages({
+        orderBy: { externalId: "asc" },
         limit,
         page,
-        includePageCount: true,
       });
+
     return {
       data,
       pageInfo,
@@ -83,35 +116,30 @@ export class PokemonService {
   }
 
   findByName(name: string) {
-    this.prisma.$runCommandRaw({ dropDatabase: 1 });
     return this.prisma.pokemon.findUnique({
-      select: prismaSelect.pokemon,
+      include: prismaInclude.pokemon,
       where: { name },
+    });
+  }
+
+  findByExternalId(externalId: string) {
+    return this.prisma.pokemon.findUnique({
+      include: prismaInclude.pokemon,
+      where: { externalId },
     });
   }
 
   findById(id: string) {
     return this.prisma.pokemon.findUnique({
-      select: prismaSelect.pokemon,
+      include: prismaInclude.pokemon,
       where: { id },
     });
   }
 
-  async paginateTypes({ limit, page }: { limit: number; page: number }) {
-    const [data, pageInfo] = await this.prisma.pokemonType
-      .paginate({
-        select: prismaSelect.pokemonType,
-        orderBy: { createdAt: "desc" },
-      })
-      .withPages({
-        limit,
-        page,
-        includePageCount: true,
-      });
-    return {
-      data,
-      pageInfo,
-    };
+  async types() {
+    return this.prisma.pokemonType.findMany({
+      orderBy: { name: "asc" },
+    });
   }
 
   addFavorite({ userId, pokemonId }: { userId: string; pokemonId: string }) {

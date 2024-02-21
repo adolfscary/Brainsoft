@@ -1,10 +1,12 @@
 import { ApiProperty } from "@nestjs/swagger";
-import {
-  PageNumberCounters,
-  PageNumberPagination,
-} from "prisma-extension-pagination/dist/types.js";
 
-type PageInfo = PageNumberPagination & PageNumberCounters;
+type PageInfo = {
+  limit: number;
+  page: number;
+  count: number;
+  exceedCount: boolean;
+  exceedTotalPages: boolean;
+};
 
 export const paginateEntity = <T extends new () => unknown>(Model: T) => {
   class PaginateClass {
@@ -24,23 +26,17 @@ export const paginateEntity = <T extends new () => unknown>(Model: T) => {
 
 export class PageInfoEntity implements PageInfo {
   @ApiProperty()
-  isFirstPage!: boolean;
+  limit!: number;
 
   @ApiProperty()
-  isLastPage!: boolean;
+  page!: number;
 
   @ApiProperty()
-  currentPage!: number;
-
-  @ApiProperty({ nullable: true })
-  previousPage!: number | null;
-
-  @ApiProperty({ nullable: true })
-  nextPage!: number | null;
+  count!: number;
 
   @ApiProperty()
-  pageCount!: number;
+  exceedCount!: boolean;
 
   @ApiProperty()
-  totalCount!: number;
+  exceedTotalPages!: boolean;
 }

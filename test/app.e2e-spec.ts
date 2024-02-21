@@ -47,6 +47,19 @@ describe("AppController (e2e)", () => {
     });
   });
 
+  describe("/pokemons (GET)", () => {
+    it("should return 401", () => {
+      return request(app.getHttpServer()).get(`/pokemons`).expect(401);
+    });
+
+    it("should return 200", () => {
+      return request(app.getHttpServer())
+        .get(`/pokemons`)
+        .set("Authorization", "Bearer test")
+        .expect(200);
+    });
+  });
+
   describe("/pokemons/{id} (GET)", () => {
     it("should return 401", () => {
       return request(app.getHttpServer())
@@ -88,6 +101,58 @@ describe("AppController (e2e)", () => {
         .get(`/pokemons/name/${pokemon.name}`)
         .set("Authorization", "Bearer test")
         .expect(200);
+    });
+  });
+
+  describe("/pokemons/external-id/{externalId} (GET)", () => {
+    it("should return 401", () => {
+      return request(app.getHttpServer())
+        .get(`/pokemons/external-id/${pokemon.externalId}`)
+        .expect(401);
+    });
+
+    it("should return 404", () => {
+      return request(app.getHttpServer())
+        .get(`/pokemons/external-id/000`)
+        .set("Authorization", "Bearer test")
+        .expect(404);
+    });
+
+    it("should return 200", () => {
+      return request(app.getHttpServer())
+        .get(`/pokemons/external-id/${pokemon.externalId}`)
+        .set("Authorization", "Bearer test")
+        .expect(200);
+    });
+  });
+
+  describe("/pokemons/types (GET)", () => {
+    it("should return 401", () => {
+      return request(app.getHttpServer()).get(`/pokemons/types`).expect(401);
+    });
+
+    it("should return 200", () => {
+      return request(app.getHttpServer())
+        .get(`/pokemons/types`)
+        .set("Authorization", "Bearer test")
+        .expect(200);
+    });
+  });
+
+  describe("/pokemons/{id}/update-favorite (PATCH)", () => {
+    it("should return 401", () => {
+      return request(app.getHttpServer())
+        .patch(`/pokemons/${pokemon.id}/update-favorite`)
+        .send({ favorite: true })
+        .expect(401);
+    });
+
+    it("should return 204", () => {
+      return request(app.getHttpServer())
+        .patch(`/pokemons/${pokemon.id}/update-favorite`)
+        .send({ favorite: true })
+        .set("Authorization", "Bearer test")
+        .expect(204);
     });
   });
 });

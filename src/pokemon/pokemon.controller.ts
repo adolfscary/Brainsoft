@@ -26,6 +26,10 @@ import {
 } from "../common/entity/page-info.entity.js";
 import { AppEntityNotFound } from "../common/error.js";
 import {
+  FindByExternalIdPokemonParamDto,
+  findByExternalIdPokemonParamSchema,
+} from "./dto/find-by-external-id-pokemon.dto.js";
+import {
   FindByIdPokemonParamDto,
   findByIdPokemonParamSchema,
 } from "./dto/find-by-id-pokemon.dto.js";
@@ -33,10 +37,6 @@ import {
   FindByNamePokemonParamDto,
   findByNamePokemonParamSchema,
 } from "./dto/find-by-name-pokemon.dto.js";
-import {
-  PaginatePokemonTypesQueryDto,
-  paginatePokemonTypesQuerySchema,
-} from "./dto/paginate-pokemon-types.dto.js";
 import {
   PaginatePokemonsQueryDto,
   paginatePokemonsQuerySchema,
@@ -47,7 +47,7 @@ import {
   updateFavoritePokemonBodySchema,
   updateFavoritePokemonParamSchema,
 } from "./dto/update-favorite-pokemon.dto.js";
-import { PokemonTypeEntity } from "./entity/pokemon-type.entity.js";
+import { PokemonTypesEntity } from "./entity/pokemon-types.entity.js";
 import { PokemonEntity } from "./entity/pokemon.entity.js";
 import { PokemonService } from "./pokemon.service.js";
 
@@ -61,23 +61,17 @@ export class PokemonController {
   @ApiBearerAuth()
   @ApiQuery({
     name: "filter[type]",
-    schema: zodToOpenAPI(
-      paginatePokemonsQuerySchema.shape.filter.unwrap().shape.type,
-    ),
+    schema: zodToOpenAPI(paginatePokemonsQuerySchema.shape["filter[type]"]),
     required: false,
   })
   @ApiQuery({
     name: "filter[favorite]",
-    schema: zodToOpenAPI(
-      paginatePokemonsQuerySchema.shape.filter.unwrap().shape.favorite,
-    ),
+    schema: zodToOpenAPI(paginatePokemonsQuerySchema.shape["filter[favorite]"]),
     required: false,
   })
   @ApiQuery({
     name: "search[name]",
-    schema: zodToOpenAPI(
-      paginatePokemonsQuerySchema.shape.search.unwrap().shape.name,
-    ),
+    schema: zodToOpenAPI(paginatePokemonsQuerySchema.shape["search[name]"]),
     required: false,
   })
   @ApiQuery({
@@ -103,17 +97,21 @@ export class PokemonController {
     status: 401,
     description: "Unauthorized",
   })
-  paginate(
+  async paginate(
     @Query() query: PaginatePokemonsQueryDto,
     @CurrentUser() currentUser: User,
   ): Promise<{
     data: PokemonEntity[];
     pageInfo: PageInfoEntity;
   }> {
-    return this.pokemonService.paginate({
+    const { data, pageInfo } = await this.pokemonService.paginate({
       ...query,
       currentUser,
     });
+    return {
+      data: data.map(this.pokemonService.toPokemonEntity),
+      pageInfo,
+    };
   }
 
   @UseGuards(AuthGuard)
@@ -151,16 +149,20 @@ export class PokemonController {
         value: name,
       });
     }
-    return pokemon;
+    return this.pokemonService.toPokemonEntity(pokemon);
   }
 
   @UseGuards(AuthGuard)
-  @Get("types")
+  @Get("external-id/:externalId")
   @ApiBearerAuth()
+  @ApiParam({
+    name: "externalId",
+    schema: zodToOpenAPI(findByExternalIdPokemonParamSchema.shape.externalId),
+  })
   @ApiResponse({
     status: 200,
     description: "OK",
-    type: paginateEntity(PokemonTypeEntity),
+    type: PokemonEntity,
   })
   @ApiResponse({
     status: 400,
@@ -174,21 +176,45 @@ export class PokemonController {
     status: 404,
     description: "Not Found",
   })
-  @ApiQuery({
-    name: "limit",
-    schema: zodToOpenAPI(paginatePokemonTypesQuerySchema.shape.limit),
-    required: false,
+  async findByExternalId(
+    @Param() { externalId }: FindByExternalIdPokemonParamDto,
+  ): Promise<PokemonEntity> {
+    const pokemon = await this.pokemonService.findByExternalId(externalId);
+    if (!pokemon) {
+      throw new AppEntityNotFound({
+        entity: "Pokemon",
+        key: "externalId",
+        value: externalId,
+      });
+    }
+    return this.pokemonService.toPokemonEntity(pokemon);
+  }
+
+  @UseGuards(AuthGuard)
+  @Get("types")
+  @ApiBearerAuth()
+  @ApiResponse({
+    status: 200,
+    description: "OK",
+    type: PokemonTypesEntity,
   })
-  @ApiQuery({
-    name: "page",
-    schema: zodToOpenAPI(paginatePokemonTypesQuerySchema.shape.page),
-    required: false,
+  @ApiResponse({
+    status: 400,
+    description: "Validation failed",
   })
-  async paginateTypes(@Query() query: PaginatePokemonTypesQueryDto): Promise<{
-    data: PokemonTypeEntity[];
-    pageInfo: PageInfoEntity;
-  }> {
-    return this.pokemonService.paginateTypes(query);
+  @ApiResponse({
+    status: 401,
+    description: "Unauthorized",
+  })
+  @ApiResponse({
+    status: 404,
+    description: "Not Found",
+  })
+  async types(): Promise<PokemonTypesEntity> {
+    const pokemonTypes = await this.pokemonService.types();
+    return {
+      data: pokemonTypes.map(({ name }) => name),
+    };
   }
 
   @UseGuards(AuthGuard)
@@ -225,7 +251,7 @@ export class PokemonController {
         value: id,
       });
     }
-    return pokemon;
+    return this.pokemonService.toPokemonEntity(pokemon);
   }
 
   @UseGuards(AuthGuard)

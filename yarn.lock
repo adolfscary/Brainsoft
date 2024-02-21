@@ -1226,6 +1226,21 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@nestjs/config@npm:^3.2.0":
+  version: 3.2.0
+  resolution: "@nestjs/config@npm:3.2.0"
+  dependencies:
+    dotenv: "npm:16.4.1"
+    dotenv-expand: "npm:10.0.0"
+    lodash: "npm:4.17.21"
+    uuid: "npm:9.0.1"
+  peerDependencies:
+    "@nestjs/common": ^8.0.0 || ^9.0.0 || ^10.0.0
+    rxjs: ^7.1.0
+  checksum: 10c0/02d86e985c24accf9071bb2bab1c3b7be8aa4edda57adfa1ab3b5bb284539c0a6b36259d056a779ec7a7934fbdbcb578d0803dc4fdc68a1c2fdf39295c04867c
+  languageName: node
+  linkType: hard
+
 "@nestjs/core@npm:^10.0.0":
   version: 10.3.2
   resolution: "@nestjs/core@npm:10.3.2"
@@ -2697,6 +2712,7 @@ __metadata:
     "@fastify/static": "npm:^7.0.1"
     "@nestjs/cli": "npm:^10.3.2"
     "@nestjs/common": "npm:^10.0.0"
+    "@nestjs/config": "npm:^3.2.0"
     "@nestjs/core": "npm:^10.0.0"
     "@nestjs/platform-express": "npm:^10.0.0"
     "@nestjs/platform-fastify": "npm:^10.3.3"
@@ -2720,7 +2736,7 @@ __metadata:
     prettier: "npm:^3.2.5"
     prettier-plugin-organize-imports: "npm:^3.2.4"
     prisma: "npm:^5.9.1"
-    prisma-extension-pagination: "npm:^0.6.0"
+    prisma-paginate: "npm:^5.2.1"
     reflect-metadata: "npm:^0.2.0"
     rxjs: "npm:^7.8.1"
     source-map-support: "npm:^0.5.21"
@@ -3413,6 +3429,20 @@ __metadata:
   dependencies:
     esutils: "npm:^2.0.2"
   checksum: 10c0/c96bdccabe9d62ab6fea9399fdff04a66e6563c1d6fb3a3a063e8d53c3bb136ba63e84250bbf63d00086a769ad53aef92d2bd483f03f837fc97b71cbee6b2520
+  languageName: node
+  linkType: hard
+
+"dotenv-expand@npm:10.0.0":
+  version: 10.0.0
+  resolution: "dotenv-expand@npm:10.0.0"
+  checksum: 10c0/298f5018e29cfdcb0b5f463ba8e8627749103fbcf6cf81c561119115754ed582deee37b49dfc7253028aaba875ab7aea5fa90e5dac88e511d009ab0e6677924e
+  languageName: node
+  linkType: hard
+
+"dotenv@npm:16.4.1":
+  version: 16.4.1
+  resolution: "dotenv@npm:16.4.1"
+  checksum: 10c0/ef3d95f48f38146df0881a4b58447ae437d2da3f6d645074b84de4e64ef64ba75fc357c5ed66b3c2b813b5369fdeb6a4777d6ade2d50e54eed6aa06dddc98bc4
   languageName: node
   linkType: hard
 
@@ -6750,12 +6780,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prisma-extension-pagination@npm:^0.6.0":
-  version: 0.6.0
-  resolution: "prisma-extension-pagination@npm:0.6.0"
+"prisma-paginate@npm:^5.2.1":
+  version: 5.2.1
+  resolution: "prisma-paginate@npm:5.2.1"
   peerDependencies:
-    "@prisma/client": ^4.9.0 || ^5.0.0
-  checksum: 10c0/7bfcf5206d17fbf18c7d08ad05b7bd7dfb11cebaba5fa5b668da54bd2dec8e9f1edd4b841ee7640c266049d2f07b48fa6f74de637b338aafa6d9eaf7e8ebf556
+    "@prisma/client": ">=4.9.0"
+    prisma: ">=4.9.0"
+  checksum: 10c0/61a372819d07aab5b1846e492f4570025ee8a228590ea17c667469a2b3d7e3d9b2aa9b423c48f31ffe84f677be3cf6526289a70a838864f24f57d18098a67d30
   languageName: node
   linkType: hard
 
@@ -8182,7 +8213,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"uuid@npm:^9.0.1":
+"uuid@npm:9.0.1, uuid@npm:^9.0.1":
   version: 9.0.1
   resolution: "uuid@npm:9.0.1"
   bin:

@@ -3,19 +3,11 @@ import { z } from "nestjs-zod/z";
 import { PAGE_LIMIT_DEFAULT, PAGE_LIMIT_MAX } from "../../common/constants.js";
 
 export const paginatePokemonsQuerySchema = z.object({
-  search: z
-    .object({
-      name: z.string().optional(),
-    })
-    .optional(),
-  filter: z
-    .object({
-      type: z.string().optional(),
-      favorite: z
-        .enum(["true", "false"])
-        .transform((value) => value === "true")
-        .optional(),
-    })
+  "search[name]": z.string().optional(),
+  "filter[type]": z.string().optional(),
+  "filter[favorite]": z
+    .enum(["true", "false"])
+    .transform((value) => value === "true")
     .optional(),
   limit: z.coerce
     .number()
@@ -26,5 +18,17 @@ export const paginatePokemonsQuerySchema = z.object({
 });
 
 export class PaginatePokemonsQueryDto extends createZodDto(
-  paginatePokemonsQuerySchema,
+  paginatePokemonsQuerySchema.transform((query) => {
+    return {
+      search: {
+        name: query["search[name]"] ?? undefined,
+      },
+      filter: {
+        type: query["filter[type]"] ?? undefined,
+        favorite: query["filter[favorite]"] ?? undefined,
+      },
+      limit: query.limit,
+      page: query.page,
+    };
+  }),
 ) {}

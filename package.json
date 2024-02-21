@@ -26,13 +26,14 @@
   "dependencies": {
     "@fastify/static": "^7.0.1",
     "@nestjs/common": "^10.0.0",
+    "@nestjs/config": "^3.2.0",
     "@nestjs/core": "^10.0.0",
     "@nestjs/platform-express": "^10.0.0",
     "@nestjs/platform-fastify": "^10.3.3",
     "@nestjs/swagger": "^7.3.0",
     "@prisma/client": "^5.9.1",
     "nestjs-zod": "^3.0.0",
-    "prisma-extension-pagination": "^0.6.0",
+    "prisma-paginate": "^5.2.1",
     "reflect-metadata": "^0.2.0",
     "rxjs": "^7.8.1",
     "uuid": "^9.0.1"
@@ -69,6 +70,7 @@
     "zx": "^7.2.3"
   },
   "jest": {
+    "testTimeout": 20000,
     "extensionsToTreatAsEsm": [
       ".ts"
     ],

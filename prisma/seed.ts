@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+import "dotenv/config";
 import fs from "fs";
 
 const pokemons = JSON.parse(fs.readFileSync("./seed/pokemons.json").toString());

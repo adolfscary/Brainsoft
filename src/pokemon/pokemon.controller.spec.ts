@@ -52,14 +52,41 @@ describe("PokemonController", () => {
             createdAt: expect.any(Date),
           };
         }),
-        types: data.types.map((type) => {
-          return {
-            ...type,
-            id: expect.any(String),
-            updatedAt: expect.any(Date),
-            createdAt: expect.any(Date),
-          };
-        }),
+      });
+    });
+
+    describe("findByExternalId", () => {
+      it("should get pokemon by external id", async () => {
+        const pokemon = await prisma.pokemon.findFirstOrThrow({
+          where: { externalId: "001" },
+        });
+        const data = await controller.findByExternalId({
+          externalId: pokemon.externalId,
+        });
+        expect(data?.id).toBe(pokemon.id);
+        expect(data).toMatchSnapshot({
+          id: expect.any(String),
+          updatedAt: expect.any(Date),
+          createdAt: expect.any(Date),
+          evolutions: data.evolutions.map((evolution) => {
+            return {
+              ...evolution,
+              id: expect.any(String),
+              updatedAt: expect.any(Date),
+              createdAt: expect.any(Date),
+            };
+          }),
+          previousEvolutions: data.previousEvolutions.map(
+            (previousEvolution) => {
+              return {
+                ...previousEvolution,
+                id: expect.any(String),
+                updatedAt: expect.any(Date),
+                createdAt: expect.any(Date),
+              };
+            },
+          ),
+        });
       });
     });
 
@@ -92,14 +119,6 @@ describe("PokemonController", () => {
               };
             },
           ),
-          types: data.types.map((type) => {
-            return {
-              ...type,
-              id: expect.any(String),
-              updatedAt: expect.any(Date),
-              createdAt: expect.any(Date),
-            };
-          }),
         });
       });
     });
@@ -107,7 +126,15 @@ describe("PokemonController", () => {
     describe("paginate", () => {
       it("should paginate over pokemons", async () => {
         const user = await prisma.user.create({ data: { email: "test" } });
-        const data = await controller.paginate({ limit: 1, page: 1 }, user);
+        const data = await controller.paginate(
+          {
+            limit: 1,
+            page: 1,
+            filter: { favorite: undefined, type: undefined },
+            search: { name: undefined },
+          },
+          user,
+        );
         expect(data).toMatchSnapshot({
           data: data.data.map((one) => {
             return {
@@ -133,33 +160,16 @@ describe("PokemonController", () => {
                   };
                 },
               ),
-              types: one.types.map((type) => {
-                return {
-                  ...type,
-                  id: expect.any(String),
-                  updatedAt: expect.any(Date),
-                  createdAt: expect.any(Date),
-                };
-              }),
             };
           }),
         });
       });
     });
 
-    describe("paginateTypes", () => {
+    describe("types", () => {
       it("should paginate over pokemons types", async () => {
-        const data = await controller.paginateTypes({ limit: 1, page: 1 });
-        expect(data).toMatchSnapshot({
-          data: data.data.map((one) => {
-            return {
-              ...one,
-              id: expect.any(String),
-              updatedAt: expect.any(Date),
-              createdAt: expect.any(Date),
-            };
-          }),
-        });
+        const data = await controller.types();
+        expect(data).toMatchSnapshot();
       });
     });
 

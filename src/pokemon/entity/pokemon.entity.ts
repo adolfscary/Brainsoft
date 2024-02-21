@@ -4,7 +4,6 @@ import { PokemonAttacksEntity } from "./pokemon-attacks.entity.js";
 import { PokemonEvolutionRequirementEntity } from "./pokemon-evolution-requirement.entity.js";
 import { PokemonEvolutionEntity } from "./pokemon-evolution.entity.js";
 import { PokemonHeightEntity } from "./pokemon-height.entity.js";
-import { PokemonTypeEntity } from "./pokemon-type.entity.js";
 import { PokemonWeightEntity } from "./pokemon-weight.entity.js";
 
 export class PokemonEntity implements Partial<Prisma.Pokemon> {
@@ -62,6 +61,6 @@ export class PokemonEntity implements Partial<Prisma.Pokemon> {
   @ApiProperty({ type: () => [PokemonEvolutionEntity] })
   previousEvolutions!: PokemonEvolutionEntity[];
 
-  @ApiProperty({ type: () => [PokemonTypeEntity] })
-  types!: PokemonTypeEntity[];
+  @ApiProperty({ type: () => [String] })
+  types!: string[];
 }

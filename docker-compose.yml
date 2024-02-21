@@ -3,6 +3,7 @@ services:
   app:
     build:
       context: .
+    stop_grace_period: 3s
     environment:
       DATABASE_URL: mongodb://mongodb:27017/brainsoft?replicaSet=rs0
     ports:
@@ -22,7 +23,7 @@ services:
         "/dev/null",
       ]
     ports:
-      - "27017:27017"
+      - "27017"
     volumes:
       - mongodb-data:/data/db
       - mongodb-config:/data/configdb"

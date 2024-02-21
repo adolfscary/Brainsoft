@@ -1,56 +1,22 @@
 import { Prisma } from "@prisma/client";
 
-export const prismaSelect: {
-  pokemon: Prisma.PokemonSelect;
-  pokemonType: Prisma.PokemonTypeSelect;
+export const prismaInclude: {
+  pokemon: Prisma.PokemonInclude;
 } = {
   pokemon: {
-    id: true,
-    externalId: true,
-    name: true,
-    classification: true,
-    resistant: true,
-    weaknesses: true,
-    weight: true,
-    height: true,
-    fleeRate: true,
-    evolutionRequirements: true,
-    maxCP: true,
-    maxHP: true,
-    attacks: true,
-    updatedAt: true,
-    createdAt: true,
     evolutions: {
-      select: {
-        id: true,
-        externalId: true,
-        name: true,
-        updatedAt: true,
-        createdAt: true,
-      },
+      orderBy: { externalId: "asc" },
     },
     previousEvolutions: {
-      select: {
-        id: true,
-        externalId: true,
-        name: true,
-        updatedAt: true,
-        createdAt: true,
+      orderBy: {
+        externalId: "asc",
       },
     },
     types: {
-      select: {
-        id: true,
-        name: true,
-        updatedAt: true,
-        createdAt: true,
+      orderBy: {
+        name: "asc",
       },
     },
-  },
-  pokemonType: {
-    id: true,
-    name: true,
-    updatedAt: true,
-    createdAt: true,
+    users: true,
   },
 };
